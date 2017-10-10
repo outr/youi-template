@@ -11,14 +11,6 @@ lazy val template = crossApplication.in(file("."))
     youiVersion := youi,
     name := "youi-template"
   )
-  .jsSettings(
-    artifactPath in (Compile, fastOptJS) := (resourceManaged in Compile).value / "application.js",
-    artifactPath in (Compile, fullOptJS) := (resourceManaged in Compile).value / "application.js",
-    crossTarget in fastOptJS := baseDirectory.value / ".." / "jvm" / "src" / "main" / "resources" / "app",
-    crossTarget in fullOptJS := baseDirectory.value / ".." / "jvm" / "src" / "main" / "resources" / "app",
-    crossTarget in packageJSDependencies := baseDirectory.value / ".." / "jvm" / "src" / "main" / "resources" / "app",
-    skip in packageJSDependencies := false
-  )
   .jvmSettings(
     fork := true,
     libraryDependencies ++= Seq(
