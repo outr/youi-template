@@ -3,14 +3,11 @@ package io.youi.template
 import java.io.File
 
 import io.youi.optimizer.HTMLOptimizer
-import scribe.formatter.FormatterBuilder
-import scribe.{LogHandler, Logger}
 import io.youi.stream.{ByTag, Delta, HTMLParser}
 import org.powerscala.io._
 import org.powerscala.io.watcher.{PathEvent, Watcher}
 
 import scala.collection.mutable.ListBuffer
-import scala.io.StdIn
 import scala.sys.process._
 
 class TemplateCompiler(val sourceDirectory: File,

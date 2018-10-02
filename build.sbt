@@ -1,9 +1,9 @@
 name in ThisBuild := "youi-template"
 organization in ThisBuild := "io.youi"
 version in ThisBuild := "1.0.0-SNAPSHOT"
-scalaVersion in ThisBuild := "2.12.3"
+scalaVersion in ThisBuild := "2.12.6"
 
-val youi = "0.8.0-SNAPSHOT"
+val youi = "0.9.0-M20"
 val powerScala = "2.0.5"
 
 lazy val template = crossApplication.in(file("."))

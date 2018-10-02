@@ -2,19 +2,22 @@ package io.youi.template
 
 import java.io.File
 
-import profig.{Config, ConfigApplication}
-import scribe.{LogHandler, Logger}
-import scribe.formatter.FormatterBuilder
+import profig.Profig
+import scribe.Logger
+import scribe.format._
 
 import scala.io.StdIn
 
-object TemplateRunner extends ConfigApplication {
-  override def main(args: Array[String]): Unit = start(args)
+object TemplateRunner {
+  def main(args: Array[String]): Unit = {
+    Profig.loadDefaults()
+    Profig.merge(args)
 
-  override protected def run(): Unit = {
-    Logger.root.clearHandlers()
-    Logger.root.addHandler(LogHandler(formatter = FormatterBuilder().date().string(" - ").message.newLine))
-    val config = Config.as[TemplateConfig]
+    Logger.root
+      .clearHandlers()
+      .withHandler(formatter = formatter"$date - $message$newLine")
+      .replace()
+    val config = Profig.as[TemplateConfig]
     assert(config.source.nonEmpty, "Source path must be specified (-source).")
     val source = new File(config.source.get)
     assert(source.isDirectory, s"Source directory must be a directory (${source.getAbsolutePath})")
