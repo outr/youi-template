@@ -133,7 +133,9 @@ class TemplateCompiler(val sourceDirectory: File,
         val src = openTag.attributes("src")
         if (openTag.close.nonEmpty) {
           val html = compilePartial(src)
-          html.substring(0, html.indexOf("<content/>"))
+          val contentIndex = html.indexOf("<content/>")
+          assert(contentIndex != -1, s"Any include must contain a <content/> block, but one was not found in $src")
+          html.substring(0, contentIndex)
         } else {
           compilePartial(src)
         }

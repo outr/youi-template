@@ -3,7 +3,7 @@ organization in ThisBuild := "io.youi"
 version in ThisBuild := "1.0.0-SNAPSHOT"
 scalaVersion in ThisBuild := "2.12.6"
 
-val youi = "0.9.0-M21"
+val youi = "0.9.0-M22-SNAPSHOT"
 val powerScala = "2.0.5"
 
 lazy val template = crossApplication.in(file("."))
