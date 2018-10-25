@@ -1,9 +1,26 @@
 name in ThisBuild := "youi-template"
 organization in ThisBuild := "io.youi"
-version in ThisBuild := "1.0.0-SNAPSHOT"
+version in ThisBuild := "1.0.0"
 scalaVersion in ThisBuild := "2.12.6"
+resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
-val youi = "0.9.0-M22-SNAPSHOT"
+publishTo in ThisBuild := sonatypePublishTo.value
+sonatypeProfileName in ThisBuild := "io.youi"
+publishMavenStyle in ThisBuild := true
+licenses in ThisBuild := Seq("MIT" -> url("https://github.com/outr/youi-template/blob/master/LICENSE"))
+sonatypeProjectHosting in ThisBuild := Some(xerial.sbt.Sonatype.GitHubHosting("outr", "youi-template", "matt@outr.com"))
+homepage in ThisBuild := Some(url("https://github.com/outr/youi-template"))
+scmInfo in ThisBuild := Some(
+  ScmInfo(
+    url("https://github.com/outr/youi-template"),
+    "scm:git@github.com:outr/youi-template.git"
+  )
+)
+developers in ThisBuild := List(
+  Developer(id="darkfrog", name="Matt Hicks", email="matt@matthicks.com", url=url("http://matthicks.com"))
+)
+
+val youi = "0.9.0-M22"
 val powerScala = "2.0.5"
 
 lazy val template = crossApplication.in(file("."))
