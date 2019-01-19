@@ -20,7 +20,7 @@ developers in ThisBuild := List(
   Developer(id="darkfrog", name="Matt Hicks", email="matt@matthicks.com", url=url("http://matthicks.com"))
 )
 
-val youi = "0.9.0-M22"
+val youi = "0.9.11"
 val powerScala = "2.0.5"
 
 lazy val template = crossApplication.in(file("."))

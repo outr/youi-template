@@ -3,7 +3,7 @@ package io.youi.template
 import java.io.File
 
 import io.youi.app.ServerApplication
-import io.youi.http.Content
+import io.youi.http.content.Content
 import io.youi.stream._
 import profig.Profig
 
@@ -11,7 +11,7 @@ class ServerTemplateApplication(compiler: TemplateCompiler) extends ServerApplic
   addTemplate(
     lookup = (fileName: String) => {
       val file = new File(compiler.destinationDirectory, fileName)
-      if (file.exists()) {
+      if (file.isFile) {
         Some(Content.file(file))
       } else {
         None
