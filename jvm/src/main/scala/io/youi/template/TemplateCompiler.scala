@@ -2,6 +2,7 @@ package io.youi.template
 
 import java.io.File
 
+import io.bit3.jsass.OutputStyle
 import io.youi.optimizer.HTMLOptimizer
 import io.youi.stream.{ByTag, Delta, HTMLParser}
 import org.powerscala.io._
@@ -201,23 +202,36 @@ class TemplateCompiler(val sourceDirectory: File,
     }
   }
 
+  private lazy val sassCompiler = new io.bit3.jsass.Compiler
+
   def compileSass(filePath: String, compress: Boolean): Unit = {
     val input = new File(sourceDirectory, s"sass/$filePath")
     val output = new File(destinationDirectory, s"css/${input.getName.substring(0, input.getName.lastIndexOf('.'))}.css")
 
     scribe.info(s"Compiling SASS file ${input.getName}...")
-    val command = new File(sourceDirectory.getParentFile, "node_modules/node-sass/bin/node-sass").getAbsolutePath
-    val b = ListBuffer.empty[String]
-    b += command
+
+    output.getParentFile.mkdirs()
+    val sass = IO.stream(input, new StringBuilder).toString
+    val options = new io.bit3.jsass.Options
     if (compress) {
-      b += "--style compressed"
+      options.setOutputStyle(OutputStyle.COMPRESSED)
     }
-    b += input.getAbsolutePath
-    b += output.getAbsolutePath
-    val exitCode = b ! LoggingProcessLogger
-    if (exitCode != 0) {
-      throw new RuntimeException(s"Failed to compile SASS code!")
-    }
+    val result = sassCompiler.compileString(sass, options)
+    val css = result.getCss
+    IO.stream(css, output)
+
+//    val command = new File(sourceDirectory.getParentFile, "node_modules/node-sass/bin/node-sass").getAbsolutePath
+//    val b = ListBuffer.empty[String]
+//    b += command
+//    if (compress) {
+//      b += "--style compressed"
+//    }
+//    b += input.getAbsolutePath
+//    b += output.getAbsolutePath
+//    val exitCode = b ! LoggingProcessLogger
+//    if (exitCode != 0) {
+//      throw new RuntimeException(s"Failed to compile SASS code!")
+//    }
   }
 }
 
