@@ -42,6 +42,9 @@ class TemplateCompiler(val sourceDirectory: File,
         compileAll(deleteFirst = false)
       }
 
+      // Reload language cache
+      server.languageSupport.clear()
+
       // Reload all active pages
       server.communication.instances().foreach(_.reload(force = true))
     } catch {
