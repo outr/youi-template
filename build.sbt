@@ -1,6 +1,6 @@
 name in ThisBuild := "youi-template"
 organization in ThisBuild := "io.youi"
-version in ThisBuild := "1.0.0"
+version in ThisBuild := "1.1.0"
 scalaVersion in ThisBuild := "2.12.8"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
