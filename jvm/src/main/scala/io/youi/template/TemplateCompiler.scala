@@ -46,7 +46,10 @@ class TemplateCompiler(val sourceDirectory: File,
       server.languageSupport.clear()
 
       // Reload all active pages
-      server.communication.instances().foreach(_.reload(force = true))
+      scribe.info("Compilation finished, reloading all clients...")
+      server.hookup.all.foreach { hookup =>
+        hookup.communication.reload(force = true)
+      }
     } catch {
       case t: Throwable => scribe.error(t)
     }

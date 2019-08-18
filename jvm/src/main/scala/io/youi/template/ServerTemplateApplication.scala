@@ -2,6 +2,7 @@ package io.youi.template
 
 import java.io.File
 
+import com.outr.hookup.{Hookup, HookupServer}
 import io.youi.app.ServerApplication
 import io.youi.http.content.Content
 import io.youi.server.handler.LanguageSupport
@@ -10,6 +11,8 @@ import profig.Profig
 
 class ServerTemplateApplication(compiler: TemplateCompiler) extends ServerApplication with TemplateApplication {
   val languageSupport = new LanguageSupport()
+
+  val hookup: HookupServer[TemplateHookup] = Hookup.server[TemplateHookup]
 
   addTemplate(
     lookup = (fileName: String) => {

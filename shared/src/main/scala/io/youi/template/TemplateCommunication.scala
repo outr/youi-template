@@ -1,9 +1,9 @@
 package io.youi.template
 
-import io.youi.communication.{Communication, client}
+import com.outr.hookup.client
 
 import scala.concurrent.Future
 
-trait TemplateCommunication extends Communication {
+trait TemplateCommunication {
   @client def reload(force: Boolean): Future[Unit]
 }

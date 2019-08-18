@@ -1,6 +1,6 @@
 name in ThisBuild := "youi-template"
 organization in ThisBuild := "io.youi"
-version in ThisBuild := "1.1.0"
+version in ThisBuild := "1.2.0-SNAPSHOT"
 scalaVersion in ThisBuild := "2.12.8"
 resolvers in ThisBuild += Resolver.sonatypeRepo("releases")
 
@@ -20,9 +20,9 @@ developers in ThisBuild := List(
   Developer(id="darkfrog", name="Matt Hicks", email="matt@matthicks.com", url=url("http://matthicks.com"))
 )
 
-val youi = "0.10.9"
+val youi = "0.11.23"
 val powerScala = "2.0.5"
-val jsass = "5.7.3"
+val jsass = "5.9.2"
 
 lazy val template = crossApplication.in(file("."))
   .settings(
@@ -33,6 +33,7 @@ lazy val template = crossApplication.in(file("."))
     fork := true,
     libraryDependencies ++= Seq(
       "io.youi" %% "youi-optimizer" % youi,
+      "io.youi" %% "youi-ui" % youi,
       "org.powerscala" %% "powerscala-io" % powerScala,
       "io.bit3" % "jsass" % jsass
     ),
