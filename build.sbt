@@ -37,7 +37,14 @@ lazy val template = crossApplication.in(file("."))
       "org.powerscala" %% "powerscala-io" % powerScala,
       "io.bit3" % "jsass" % jsass
     ),
-    assemblyJarName in assembly := "youi-template.jar"
+    assemblyJarName in assembly := "youi-template.jar",
+    assemblyMergeStrategy in assembly := {
+      case "javax/annotation/Nonnull$Checker.class" => MergeStrategy.first
+      case "javax/annotation/meta/When.class" => MergeStrategy.first
+      case x =>
+        val oldStrategy = (assemblyMergeStrategy in assembly).value
+        oldStrategy(x)
+    }
   )
 lazy val templateJS = template.js
 lazy val templateJVM = template.jvm

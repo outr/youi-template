@@ -123,7 +123,11 @@ class TemplateCompiler(val sourceDirectory: File,
     // TODO: support HTML minification
 
     synchronized {
-      pages += fileName
+      if (removeDotHTML) {
+        pages += (fileName.substring(0, fileName.indexOf('.')))
+      } else {
+        pages += fileName
+      }
     }
   }
 

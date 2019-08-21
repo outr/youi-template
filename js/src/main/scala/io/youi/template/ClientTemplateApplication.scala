@@ -18,7 +18,7 @@ object ClientTemplateApplication extends TemplateApplication with ClientApplicat
   def main(): Unit = {
     ActivationSupport.debug = true
     val paths = pages.map { page =>
-      s"/${page.substring(0, page.indexOf('.'))}"
+      s"/$page"
     }
     paths.map { p =>
       new TemplateScreen(Path.parse(p))
