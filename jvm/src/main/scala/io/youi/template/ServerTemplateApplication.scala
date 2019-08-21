@@ -23,6 +23,7 @@ class ServerTemplateApplication(compiler: TemplateCompiler) extends ServerApplic
         None
       }
     },
+    excludeDotHTML = compiler.removeDotHTML,
     deltas = List(
       Delta.InsertFirstChild(ByTag("body"), s"""<input type="hidden" id="template_pages" value="${compiler.pages.mkString(";")}"/>""")
     )
