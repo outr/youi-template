@@ -15,8 +15,12 @@ object TemplateRunner {
 
     Logger.root
       .clearHandlers()
-      .withHandler(formatter = formatter"$date - $message$newLine")
+      .withHandler(
+        minimumLevel = Some(scribe.Level.Info),
+        formatter = Formatter.enhanced
+      )
       .replace()
+
     val config = Profig.as[TemplateConfig]
     assert(config.source.nonEmpty, "Source path must be specified (-source).")
     val source = new File(config.source.get)
