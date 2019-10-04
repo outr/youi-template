@@ -31,7 +31,15 @@ object TemplateRunner {
     destination.mkdirs()
     val optimize = config.modification == "optimize"
 
-    val compiler = new TemplateCompiler(source, destination, removeDotHTML = config.removeDotHTML, consoleCommands = true, optimize = optimize)
+    val compiler = new TemplateCompiler(
+      sourceDirectory = source,
+      destinationDirectory = destination,
+      removeDotHTML = config.removeDotHTML,
+      consoleCommands = true,
+      optimize = optimize,
+      compressCSS = true,
+      spa = config.spa
+    )
     try {
       compiler.compileAll(deleteFirst = true)
       if (config.mode.equalsIgnoreCase("watch") || config.mode.equalsIgnoreCase("server")) {
@@ -62,9 +70,3 @@ object TemplateRunner {
     }
   }
 }
-
-case class TemplateConfig(mode: String = "compile",
-                          modification: String = "none",
-                          source: Option[String],
-                          destination: Option[String],
-                          removeDotHTML: Boolean = false)

@@ -1,6 +1,7 @@
 package io.youi.template
 
 import java.io.File
+import java.net.URI
 
 import io.bit3.jsass.OutputStyle
 import io.youi.optimizer.HTMLOptimizer
@@ -13,10 +14,11 @@ import scala.sys.process._
 
 class TemplateCompiler(val sourceDirectory: File,
                        val destinationDirectory: File,
-                       val compressCSS: Boolean = false,
-                       val removeDotHTML: Boolean = false,
-                       val consoleCommands: Boolean = true,
-                       val optimize: Boolean = false) {
+                       val compressCSS: Boolean,
+                       val removeDotHTML: Boolean,
+                       val consoleCommands: Boolean,
+                       val optimize: Boolean,
+                       val spa: Boolean) {
   private[template] var pages = Set.empty[String]
 
   private val server = new ServerTemplateApplication(this)
@@ -217,6 +219,7 @@ class TemplateCompiler(val sourceDirectory: File,
   def compileSass(filePath: String, compress: Boolean): Unit = {
     val input = new File(sourceDirectory, s"sass/$filePath")
     val output = new File(destinationDirectory, s"css/${input.getName.substring(0, input.getName.lastIndexOf('.'))}.css")
+    val mapOutput = new File(destinationDirectory, s"css/${input.getName.substring(0, input.getName.lastIndexOf('.'))}.css.map")
 
     scribe.info(s"Compiling SASS file ${input.getName}...")
 
@@ -225,91 +228,15 @@ class TemplateCompiler(val sourceDirectory: File,
     val options = new io.bit3.jsass.Options
     if (compress) {
       options.setOutputStyle(OutputStyle.COMPRESSED)
+      options.setSourceMapFile(new URI(mapOutput.getName))
     }
-    val result = sassCompiler.compileString(sass, options)
+    val result = sassCompiler.compileString(sass, new URI(input.getName), new URI(output.getName), options)
     val css = result.getCss
     IO.stream(css, output)
 
-//    val command = new File(sourceDirectory.getParentFile, "node_modules/node-sass/bin/node-sass").getAbsolutePath
-//    val b = ListBuffer.empty[String]
-//    b += command
-//    if (compress) {
-//      b += "--style compressed"
-//    }
-//    b += input.getAbsolutePath
-//    b += output.getAbsolutePath
-//    val exitCode = b ! LoggingProcessLogger
-//    if (exitCode != 0) {
-//      throw new RuntimeException(s"Failed to compile SASS code!")
-//    }
+    if (compress) {
+      val map = result.getSourceMap
+      IO.stream(map, mapOutput)
+    }
   }
 }
-
-object LoggingProcessLogger extends ProcessLogger {
-  override def out(s: => String): Unit = System.out.println(s)
-
-  override def err(s: => String): Unit = System.err.println(s)
-
-  override def buffer[T](f: => T): T = f
-}
-//
-//object TemplateCompiler {
-//  def main(args: Array[String]): Unit = if (args.length == 4) {
-//    Logger.root.clearHandlers()
-//    Logger.root.addHandler(LogHandler(formatter = FormatterBuilder().date().string(" - ").message.newLine))
-//
-//    val mode = args(0)
-//    val modification = args(1)
-//    val sourceDirectory = new File(args(2))
-//    val destinationDirectory = new File(args(3))
-//
-//    val optimize = modification == "optimize"
-//
-//    assert(sourceDirectory.isDirectory, s"Source directory must be a directory (${sourceDirectory.getAbsolutePath})")
-//    assert(!destinationDirectory.isFile, s"Destination must be a directory, but found a file (${destinationDirectory.getAbsolutePath})")
-//    destinationDirectory.mkdirs()
-//
-//    val compiler = new TemplateCompiler(sourceDirectory, destinationDirectory, removeDotHTML = true, consoleCommands = true, optimize = optimize)
-//    try {
-//      compiler.compileAll(deleteFirst = true)
-//      if (mode.equalsIgnoreCase("watch") || mode.equalsIgnoreCase("server")) {
-//        compiler.watch()
-//      }
-//      if (mode.equalsIgnoreCase("server")) {
-//        compiler.startServer()
-//      }
-//      if (mode.equalsIgnoreCase("watch") || mode.equalsIgnoreCase("server")) {
-//        println("Press ENTER on your keyboard to stop...")
-//        StdIn.readLine()
-//        println("Shutting down...")
-//        compiler.stopWatching()
-//        if (mode.equalsIgnoreCase("server")) {
-//          compiler.stopServer()
-//        }
-//      }
-//    } catch {
-//      case t: Throwable => {
-//        scribe.error(t)
-//        compiler.stopWatching()
-//        compiler.stopServer()
-//        System.exit(0)
-//      }
-//    }
-//  } else {
-//    println("Usage: youi-template <mode> <modification> <source directory> <destination directory>")
-//    println("\t<mode> is one of the following options:")
-//    println("\t\tcompile - does a full compile and then exit")
-//    println("\t\twatch - does a full compile, then watches for changes and compiles on-demand")
-//    println("\t\tserver - does a full compile, then starts a server to serve the pages and will auto-reload the page on change")
-//    println("\t<modification> defines modifications that should take place against the compiled template and must be one of the following options:")
-//    println("\t\tnone - no optimizations or modifications are applied after compilation")
-//    println("\t\toptimize - merges all JavaScript into a single source file (including inline and remote scripts), optimizes it, minifies it, and obfuscates it while generating a js.map file for it")
-//    println("\t<source directory> is the location where the source files are stored. Supports the following sub-folders:")
-//    println("\t\tassets - files within this directory or copied as-is into the destination directory")
-//    println("\t\tless - looks for .less files to compile and put into the css directory of the destination")
-//    println("\t\tpages - compiles and copies into the destination")
-//    println("\t\tpartials - used during compilation of pages for includes")
-//    println("\t\tsass - looks for .sass and .scss files to compile and put into the css directory of the destination")
-//    println("\t<destination directory> is the location where the template is compiled to. Note: This directory will be completely deleted during compilation.")
-//  }
-//}

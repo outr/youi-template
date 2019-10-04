@@ -25,7 +25,7 @@ class ServerTemplateApplication(compiler: TemplateCompiler) extends ServerApplic
     },
     excludeDotHTML = compiler.removeDotHTML,
     deltas = List(
-      Delta.InsertFirstChild(ByTag("body"), s"""<input type="hidden" id="template_pages" value="${compiler.pages.mkString(";")}"/>""")
+      Delta.InsertFirstChild(ByTag("body"), s"""<input type="hidden" id="template_pages" value="${if (compiler.spa) compiler.pages.mkString(";") else ""}"/>""")
     )
   )
   handlers += languageSupport
